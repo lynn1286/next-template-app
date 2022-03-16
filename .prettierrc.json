@@ -1,0 +1,8 @@
+{
+  "semi": false,
+  "trailingComma": "es5",
+  "useTabs": false,
+  "rintWidth": 80,
+  "singleQuote": true,
+  "tabWidth": 2
+}
