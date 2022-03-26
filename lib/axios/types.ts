@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-import type { IOptions } from './retryAdapterEnhancer'
+import type { AxiosRequestConfig } from 'axios'
 
 export type ErrorMessageMode = 'none' | 'modal' | 'message' | undefined
+
+export interface IAxiosRequestConfig extends AxiosRequestConfig {
+  retryCount?: number
+}
 
 export interface RequestOptions {
   // Splicing request parameters to url
@@ -19,8 +22,8 @@ export interface RequestOptions {
   errorMessageMode?: ErrorMessageMode
   // Whether to add a timestamp
   joinTime?: boolean
+
   ignoreCancelToken?: boolean
-  adapter?: IOptions
 }
 
 export interface Result<T = any> {

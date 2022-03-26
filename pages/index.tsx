@@ -1,12 +1,15 @@
-import { Button } from 'antd'
 import type { NextPage } from 'next'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 const Home: NextPage = () => {
-  return (
-    <div>
-      <Button type="primary">Primary Button</Button>
-    </div>
-  )
+  const router = useRouter()
+
+  useEffect(() => {
+    router.push('/login')
+  }, [])
+
+  return <div />
 }
 
 export default Home

@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios'
-import type { RequestOptions, Result, UploadFileParams } from './types'
+import type {
+  IAxiosRequestConfig,
+  RequestOptions,
+  Result,
+  UploadFileParams,
+} from './types'
 import type { CreateAxiosOptions } from './axiosTransform'
 
 import axios from 'axios'
@@ -24,14 +29,13 @@ export class VAxios {
   private readonly options: CreateAxiosOptions
 
   constructor(options: CreateAxiosOptions) {
-    this.options = {
+    this.options = options
+    this.axiosInstance = axios.create({
       ...options,
-      adapter: retryAdapterEnhancer(
-        axios.defaults.adapter!,
-        options.requestOptions!.adapter!
-      ),
-    }
-    this.axiosInstance = axios.create(options)
+      adapter: retryAdapterEnhancer(axios.defaults.adapter!, {
+        retryDelay: 1000,
+      }),
+    })
     this.setupInterceptors()
   }
 
@@ -188,28 +192,28 @@ export class VAxios {
   }
 
   get<T = any>(
-    config: AxiosRequestConfig,
+    config: IAxiosRequestConfig,
     options?: RequestOptions
   ): Promise<T> {
     return this.request({ ...config, method: 'GET' }, options)
   }
 
   post<T = any>(
-    config: AxiosRequestConfig,
+    config: IAxiosRequestConfig,
     options?: RequestOptions
   ): Promise<T> {
     return this.request({ ...config, method: 'POST' }, options)
   }
 
   put<T = any>(
-    config: AxiosRequestConfig,
+    config: IAxiosRequestConfig,
     options?: RequestOptions
   ): Promise<T> {
     return this.request({ ...config, method: 'PUT' }, options)
   }
 
   delete<T = any>(
-    config: AxiosRequestConfig,
+    config: IAxiosRequestConfig,
     options?: RequestOptions
   ): Promise<T> {
     return this.request({ ...config, method: 'DELETE' }, options)

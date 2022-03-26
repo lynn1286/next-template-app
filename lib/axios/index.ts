@@ -38,13 +38,6 @@ const transform: AxiosTransform = {
 
     // 请求失败
     if (!hasSuccess) {
-      if (msg) {
-        if (options.errorMessageMode === 'modal') {
-          Promise.reject(msg)
-        } else if (options.errorMessageMode === 'message') {
-          Promise.reject(msg)
-        }
-      }
       Promise.reject(new Error(msg))
       return errorResult
     }
@@ -180,16 +173,12 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           joinParamsToUrl: false,
           // 格式化提交参数时间
           formatDate: true,
-          // 消息提示类型
-          errorMessageMode: 'message',
           // 接口地址
           apiUrl: '',
           //  是否加入时间戳
           joinTime: true,
           // 忽略重复请求
           ignoreCancelToken: true,
-          // 重试请求的时间
-          adapter: { retryDelay: 1000, retryCount: 2 },
         },
       },
       opt || {}
