@@ -19,10 +19,15 @@
       "@components/*": ["components/*"],
       "@utils/*": ["utils/*"],
       "@lib/*": ["lib/*"],
-      "@services/*": ["services/*"],
       "@styles/*": ["styles/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "process.d.ts",
+    "next-env.d.ts",
+    "next-auth.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
   "exclude": ["node_modules"]
 }

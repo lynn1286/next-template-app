@@ -1,5 +1,14 @@
 /* stylelint-disable at-rule-no-unknown */
 
-/* @tailwind base; */
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+iframe {
+  background: #ccc;
+  border: 1px solid #ccc;
+  height: 10rem;
+  width: 100%;
+  border-radius: 0.5rem;
+  filter: invert(1);
+}

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { AxiosAdapter } from 'axios'
 
 export interface IOptions {

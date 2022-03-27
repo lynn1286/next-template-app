@@ -1,3 +1,4 @@
+import { SessionProvider } from 'next-auth/react'
 import Head from 'next/head'
 
 import '@styles/globals.css'
@@ -16,7 +17,9 @@ function MyApp({ Component, pageProps }: AppProps) {
           content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
         />
       </Head>
-      <Component {...pageProps} />
+      <SessionProvider refetchInterval={0} session={pageProps.session}>
+        <Component {...pageProps} />
+      </SessionProvider>
     </>
   )
 }
