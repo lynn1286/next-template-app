@@ -23,9 +23,9 @@
     }
   },
   "include": [
-    "process.d.ts",
+    "types/process.d.ts",
     "next-env.d.ts",
-    "next-auth.d.ts",
+    "types/next-auth.d.ts",
     "**/*.ts",
     "**/*.tsx"
   ],
