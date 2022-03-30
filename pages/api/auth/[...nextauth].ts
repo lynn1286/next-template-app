@@ -29,14 +29,16 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
             password: credentials?.password,
           })
 
-          console.log('lynn  : authorize -> ', {
-            Authorization: `Bearer ${res.accessToken}`,
-          })
-          const user = await GET('/me', undefined, {
+          const user: any = await GET('/me', undefined, {
             headers: { Authorization: `Bearer ${res.accessToken}` },
           })
 
-          return user as any
+          return {
+            ...user,
+            accessToken: res.accessToken,
+            picture: '234',
+            sub: '123',
+          }
         } catch (error) {
           return null
         }
@@ -47,11 +49,23 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   return await NextAuth(req, res, {
     providers,
     callbacks: {
-      async jwt({ token }) {
+      async jwt(res) {
+        console.log('lynn  : jwt -> res', res)
+        const { token, account } = res
+
         token.userRole = 'admin'
+
+        if (account) {
+          token.accessToken = account.access_token
+        }
+
         return token
       },
     },
     secret: process.env.NEXTAUTH_SECRET,
+    pages: {
+      // signIn: '/auth/signin',
+      // signOut: '/auth/signout',
+    },
   })
 }

@@ -17,7 +17,7 @@ export interface IAxiosRequestConfig extends AxiosRequestConfig {
 //   message?: string
 // }
 
-const baseURL = process.env.API_URL || 'http://localhost:3001'
+const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
 
 export const request = axios.create({
   baseURL,
@@ -29,6 +29,7 @@ export const request = axios.create({
 // 请求拦截`
 request.interceptors.request.use(async (config) => {
   const session = await getSession()
+  console.log('lynn  : axios session', session)
 
   if (session) {
     config.headers!.Authorization = `Bearer ${session.jwt}`
