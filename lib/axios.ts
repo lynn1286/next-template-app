@@ -29,10 +29,9 @@ export const request = axios.create({
 // 请求拦截`
 request.interceptors.request.use(async (config) => {
   const session = await getSession()
-  console.log('lynn  : axios session', session)
 
   if (session) {
-    config.headers!.Authorization = `Bearer ${session.jwt}`
+    config.headers!.Authorization = `Bearer ${session.accessToken}`
   }
 
   return config

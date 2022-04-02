@@ -13,7 +13,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       clientSecret: process.env.GITHUB_SECRET,
     }),
     CredentialsProvider({
-      name: 'Credentials',
+      name: 'myProject',
       credentials: {
         email: {
           label: 'email',
@@ -24,21 +24,20 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       },
       async authorize(credentials, req) {
         try {
-          const res = await POST<{ accessToken: string }>('/auth/login', {
-            email: credentials?.email,
-            password: credentials?.password,
-          })
+          const { accessToken } = await POST<{ accessToken: string }>(
+            '/auth/login',
+            {
+              email: credentials?.email,
+              password: credentials?.password,
+            }
+          )
 
           const user: any = await GET('/me', undefined, {
-            headers: { Authorization: `Bearer ${res.accessToken}` },
+            headers: { Authorization: `Bearer ${accessToken}` },
           })
 
-          return {
-            ...user,
-            accessToken: res.accessToken,
-            picture: '234',
-            sub: '123',
-          }
+          if (user) return { ...user, accessToken }
+          return null
         } catch (error) {
           return null
         }
@@ -49,27 +48,28 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   return await NextAuth(req, res, {
     providers,
     callbacks: {
-      async jwt(res) {
-        console.log('lynn  : jwt -> res', res)
-        const { token, account } = res
-
-        token.userRole = 'admin'
-
-        if (account) {
-          token.accessToken = account.access_token
+      jwt: async (res) => {
+        if (res.user) {
+          res.token.accessToken = res.user.accessToken
         }
 
-        return token
+        return res.token
       },
-      async session({ session, token, user }) {
-        session.accessToken = token.accessToken
-        return session
+      session: async (res) => {
+        if (res.token) {
+          res.session.accessToken = res.token.accessToken
+        }
+
+        return res.session
       },
     },
-    secret: process.env.NEXTAUTH_SECRET,
+
     pages: {
       // signIn: '/auth/signin',
       // signOut: '/auth/signout',
     },
+
+    secret: process.env.NEXTAUTH_SECRET,
+    debug: process.env.NODE_ENV === 'development',
   })
 }
