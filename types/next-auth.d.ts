@@ -11,17 +11,17 @@ declare module 'next-auth' {
   interface Session {
     user: {
       /** The user's postal address. */
-      accessToken: string
-      image: string
-      email: string
-      name: string
+      accessToken?: string
+      image?: string
+      email?: string
+      name?: string
     }
   }
 }
 
 declare module 'next-auth/jwt' {
   interface JWT {
-    /** The user's role. */
-    userRole?: 'admin'
+    userRole?: string
+    accessToken?: string
   }
 }

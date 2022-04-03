@@ -13,6 +13,7 @@
     "@ant-design/icons": "^4.7.0",
     "antd": "^4.19.3",
     "axios": "^0.26.1",
+    "axios-auth-refresh": "^3.2.2",
     "classnames": "^2.3.1",
     "cookie": "^0.4.2",
     "less": "^4.1.2",

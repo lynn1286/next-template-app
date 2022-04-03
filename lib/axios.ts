@@ -31,31 +31,44 @@ request.interceptors.request.use(async (config) => {
   const session = await getSession()
 
   if (session) {
-    config.headers!.Authorization = `Bearer ${session.accessToken}`
+    config.headers!.Authorization = `Bearer ${session.user.accessToken}`
   }
 
   return config
 })
 
 // 响应拦截
-request.interceptors.response.use((response) => {
-  const {
-    data,
-    data: { errors },
-    status,
-  } = response
+request.interceptors.response.use(
+  (response) => {
+    const { data } = response
+    console.log('lynn  : response', response)
 
-  if (status === 200 && errors && typeof window !== undefined) {
-    notification.error({
-      message: '请求错误',
-      description: JSON.stringify(errors),
-    })
+    if (data.error && typeof window !== undefined) {
+      notification.error({
+        message: '请求错误',
+        description: JSON.stringify(data.error),
+      })
 
-    return Promise.reject(errors)
+      return Promise.reject(data.error)
+    }
+
+    return data
+  },
+  (error) => {
+    const { response } = error
+
+    if (response.data.error && typeof window !== undefined) {
+      notification.error({
+        message: '请求错误',
+        description: JSON.stringify(response.data.error.message),
+      })
+
+      return Promise.reject(response.data.error)
+    }
+
+    return error
   }
-
-  return data
-})
+)
 
 export const GET = <T>(
   URL: string,

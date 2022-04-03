@@ -37,6 +37,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
           })
 
           if (user) return { ...user, accessToken }
+
           return null
         } catch (error) {
           return null
@@ -48,27 +49,27 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   return await NextAuth(req, res, {
     providers,
     callbacks: {
-      jwt: async (res) => {
-        if (res.user) {
-          res.token.accessToken = res.user.accessToken
-        }
+      // 每次调用 session 的时候 都会触发并将 token 存入 user 中
+      async session({ session, token }) {
+        session.user.accessToken = token.accessToken
 
-        return res.token
+        return session
       },
-      session: async (res) => {
-        if (res.token) {
-          res.session.accessToken = res.token.accessToken
+
+      async jwt({ token, user, account }) {
+        // 第一次登录的时候 会进入 if 分支 ， 并存入 cookie 中
+        if (account && user) {
+          token.accessToken = user.accessToken as string
+          token.userRole = 'admin'
         }
 
-        return res.session
+        return token
       },
     },
-
     pages: {
       // signIn: '/auth/signin',
       // signOut: '/auth/signout',
     },
-
     secret: process.env.NEXTAUTH_SECRET,
     debug: process.env.NODE_ENV === 'development',
   })
