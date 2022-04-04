@@ -1,22 +1,59 @@
 import { GET } from '@lib/axios'
-import { useSession } from 'next-auth/react'
-import { useEffect } from 'react'
+import { signIn, getSession } from 'next-auth/react'
+import { useEffect, useState } from 'react'
+import { Modal } from 'antd'
+
+import type { NextPageContext } from 'next'
+
 import Layout from '../../components/layout'
 
-export default function MePage() {
-  const { data } = useSession()
+export default function MePage({ session }: any) {
+  const [isModalVisible, setModalVisible] = useState(false)
+  const [user, setUser] = useState({})
 
   useEffect(() => {
-    const fn = async () => {
-      const user = await GET('/me')
+    if (session?.error === 'accessTokenExpiresError') {
+      setModalVisible(true)
     }
+  }, [session])
 
-    fn()
+  useEffect(() => {
+    getUserInfo()
   }, [])
+
+  const getUserInfo = async () => {
+    const user = await GET('/me')
+
+    setUser(user)
+  }
+
+  const handleOk = () => {
+    signIn()
+  }
 
   return (
     <Layout>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+      <pre>{JSON.stringify(session, null, 2)}</pre>
+
+      <pre>{JSON.stringify(user)}</pre>
+
+      <Modal
+        title="Basic Modal"
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={() => setModalVisible(false)}
+      >
+        token 过期 ， 请重新登录
+      </Modal>
     </Layout>
   )
+}
+
+// Export the `session` prop to use sessions with Server Side Rendering
+export async function getServerSideProps(context: NextPageContext) {
+  return {
+    props: {
+      session: await getSession(context),
+    },
+  }
 }

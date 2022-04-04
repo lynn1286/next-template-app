@@ -12,10 +12,20 @@ declare module 'next-auth' {
     user: {
       /** The user's postal address. */
       accessToken?: string
+      refreshToken?: string
       image?: string
       email?: string
       name?: string
     }
+    error?: string
+  }
+
+  interface User {
+    accessToken?: string
+    refreshToken?: string
+    image?: string
+    email?: string
+    name?: string
   }
 }
 
@@ -23,5 +33,8 @@ declare module 'next-auth/jwt' {
   interface JWT {
     userRole?: string
     accessToken?: string
+    refreshToken?: string
+    accessTokenExpires?: number
+    error?: string
   }
 }

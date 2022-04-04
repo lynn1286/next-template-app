@@ -1,4 +1,5 @@
-import { signIn } from "next-auth/react"
+/* eslint-disable @next/next/no-html-link-for-pages */
+import { signIn } from 'next-auth/react'
 
 export default function AccessDenied() {
   return (

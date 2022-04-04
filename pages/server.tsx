@@ -1,6 +1,7 @@
-import { useSession, getSession } from "next-auth/react"
-import Layout from "../components/layout"
-import type { NextPageContext } from "next"
+import { useSession, getSession } from 'next-auth/react'
+import Layout from '../components/layout'
+import type { NextPageContext } from 'next'
+import axios from 'axios'
 
 export default function ServerSidePage() {
   // As this page uses Server Side Rendering, the `session` will be already
@@ -8,17 +9,17 @@ export default function ServerSidePage() {
   // This is possible because of the shared context configured in `_app.js` that
   // is used by `useSession()`.
   const { data: session, status } = useSession()
-  const loading = status === "loading"
+  const loading = status === 'loading'
 
   return (
     <Layout>
       <h1>Server Side Rendering</h1>
       <p>
-        This page uses the universal <strong>getSession()</strong> method in{" "}
+        This page uses the universal <strong>getSession()</strong> method in{' '}
         <strong>getServerSideProps()</strong>.
       </p>
       <p>
-        Using <strong>getSession()</strong> in{" "}
+        Using <strong>getSession()</strong> in{' '}
         <strong>getServerSideProps()</strong> is the recommended approach if you
         need to support Server Side Rendering with authentication.
       </p>
@@ -36,6 +37,9 @@ export default function ServerSidePage() {
 
 // Export the `session` prop to use sessions with Server Side Rendering
 export async function getServerSideProps(context: NextPageContext) {
+  const respone = await getSession(context)
+  console.log('lynn  : getServerSideProps -> respone', respone)
+
   return {
     props: {
       session: await getSession(context),
