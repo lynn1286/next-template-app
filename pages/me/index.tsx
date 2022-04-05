@@ -1,5 +1,5 @@
 import { GET } from '@lib/axios'
-import { signIn, getSession } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { Modal } from 'antd'
 
@@ -7,9 +7,11 @@ import type { NextPageContext } from 'next'
 
 import Layout from '../../components/layout'
 
-export default function MePage({ session }: any) {
+export default function MePage() {
   const [isModalVisible, setModalVisible] = useState(false)
   const [user, setUser] = useState({})
+  const { data: session, status } = useSession()
+  console.log('lynn  : MePage -> session', session)
 
   useEffect(() => {
     if (session?.error === 'accessTokenExpiresError') {
@@ -33,7 +35,7 @@ export default function MePage({ session }: any) {
 
   return (
     <Layout>
-      <pre>{JSON.stringify(session, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(session, null, 2)}</pre> */}
 
       <pre>{JSON.stringify(user)}</pre>
 
@@ -47,13 +49,4 @@ export default function MePage({ session }: any) {
       </Modal>
     </Layout>
   )
-}
-
-// Export the `session` prop to use sessions with Server Side Rendering
-export async function getServerSideProps(context: NextPageContext) {
-  return {
-    props: {
-      session: await getSession(context),
-    },
-  }
 }

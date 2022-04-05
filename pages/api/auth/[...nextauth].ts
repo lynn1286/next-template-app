@@ -85,7 +85,9 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         }
       },
     },
-
+    session: {
+      strategy: 'jwt',
+    },
     pages: {
       // signIn: '/auth/signin',
       // signOut: '/auth/signout',
